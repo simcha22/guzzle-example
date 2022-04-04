@@ -7,19 +7,26 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
-    public  function store(LoginRequest $request){
+    public  function store(LoginRequest $request)
+    {
 
-        $user = User::where('email', $request->email)->first();
+        //$user = User::where('user_name', $request->user_name)->first();
 
-        // Check password
-        if(!$user || !Hash::check($request->password, $user->password)) {
+        // Check user and password
+        $user = User::where('user_name', $request->user_name)
+            ->where('password', md5($request->user_name . $request->password))
+            ->first();
+        //$user = DB::select("select * from pa.pa_users where password = (select md5('" . $request->user_name . $request->password . "'))");
+
+        if (!$user) {
             return response([
                 'message' => 'Bad creds'
             ], 401);
-        }
+        } 
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
@@ -31,11 +38,11 @@ class LoginController extends Controller
         return response($response, 201);
     }
 
-    // public function logout(Request $request) {
-    //     auth()->user()->tokens()->delete();
+    public function logout(Request $request) {
 
-    //     return [
-    //         'message' => 'Logged out'
-    //     ];
-    // }
+        $request->user()->currentAccessToken()->delete();
+        return [
+            'message' => 'Logged out'
+        ];
+    }
 }

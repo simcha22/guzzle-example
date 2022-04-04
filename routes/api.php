@@ -19,8 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/posts', [\App\Http\Controllers\Api\PostsController::class, 'indax']);
+    Route::get('/posts', [\App\Http\Controllers\Api\PostsController::class, 'index']);
+    Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout']);
 });
+
 // Route::post('/powerlink/create', [\App\Http\Controllers\PowerlinkController::class, 'create']);
 // Route::post('/powerlink/uploadFile', [\App\Http\Controllers\PowerlinkController::class, 'uploadFile']);
 

@@ -9,8 +9,10 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'content'
-    ];
+    // protected $fillable = [
+    //     'title',
+    //     'content'
+    // ];
+
+    protected $table = 'pa.t_tt_inbox';
 }
