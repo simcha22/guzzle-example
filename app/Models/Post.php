@@ -14,5 +14,5 @@ class Post extends Model
     //     'content'
     // ];
 
-    protected $table = 'pa.t_tt_inbox';
+    protected $table = 't_tt_inbox';
 }

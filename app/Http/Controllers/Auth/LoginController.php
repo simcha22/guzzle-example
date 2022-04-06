@@ -39,7 +39,7 @@ class LoginController extends Controller
         }
 
         // Check user group
-        $group = DB::table('pa.pa_user_to_groups')->select('ug_id')->where('u_id', $user->id)->first();
+        $group = DB::table('pa_user_to_groups')->select('ug_id')->where('u_id', $user->id)->first();
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
