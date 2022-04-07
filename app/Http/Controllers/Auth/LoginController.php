@@ -19,6 +19,7 @@ class LoginController extends Controller
         // Check user and password
         $user = User::where('user_name', $request->user_name)
             ->where('password', md5($request->user_name . $request->password))
+            ->where('blocked', '0')
             ->first();
 
         //$user = DB::select("select * from pa.pa_users where password = (select md5('" . $request->user_name . $request->password . "'))");

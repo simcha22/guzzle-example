@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostsController extends Controller
 {
     public function index()
     {
+        //return (Auth::user());
+
         return DB::select("SELECT t1.SCREEN_NAME , t1.PERMISSIONS_LEVEL , t1.GRID_VIEW 
         FROM T_ADM_PROFILE_SCREEN_CONFIG t1, t_adm_profile_screen_base t2
         WHERE PROFILE_ID IN
