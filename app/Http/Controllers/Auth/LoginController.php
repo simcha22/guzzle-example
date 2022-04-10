@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Traits\ApiResponser;
 
 class LoginController extends Controller
 {
+    use ApiResponser;
+
     public  function store(LoginRequest $request)
     {
-
         //$user = User::where('user_name', $request->user_name)->first();
 
         // Check user and password
@@ -25,18 +27,7 @@ class LoginController extends Controller
         //$user = DB::select("select * from pa.pa_users where password = (select md5('" . $request->user_name . $request->password . "'))");
 
         if (!$user) {
-            return response()->json([
-                'clientAddress' => $request->ip(),
-                'message' => "Invalid Username or password",
-                'otpEnabled' => null,
-                'phone' => null,
-                'result' => "REJECTED",
-                'userGroupId' => null,
-                'userId' => 0,
-                'userLevel' => null,
-                'userType' => null,
-                'username' => null,
-            ], 200);
+            return $this->rejected($request->ip(), 200);
         }
 
         // Check user group
@@ -44,34 +35,14 @@ class LoginController extends Controller
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
-        $response = [
-            'clientAddress' => $request->ip(),
-            'message' => null,
-            'otpEnabled' => $user->otp_enabled,
-            'phone' => $user->phone_number,
-            'result' => "SUCCESS",
-            'userGroupId' => $group->ug_id,
-            'userId' => $user->id,
-            'userLevel' => $user->user_type,
-            'userType' => $user->user_type,
-            'username' => $user->user_name,
-            //'user' => $user,
-            'token' => $token
-        ];
+        return $this->successLogin($request->ip(), $user, $token, $group, 201);
 
-        return response()->json($response, 201);
     }
 
     public function logout(Request $request)
     {
-
         $request->user()->currentAccessToken()->delete();
-        $response = [
-            'clientAddress' => $request->ip(),
-            'message' => null,
-            'result' => "SUCCESS",
-        ];
+        return $this->successLogout($request->ip(), 200);
 
-        return response()->json($response, 200);
     }
 }
